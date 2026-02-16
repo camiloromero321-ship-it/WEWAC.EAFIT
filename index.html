@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEWAC - Caso de Estudio Finanzas Regenerativas (EAFIT)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@300;400;700&family=Azeret+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --accent-emerald: #10b981;
+            --accent-blue: #3b82f6;
+        }
+
+        /* 1. ESTRUCTURA DE SCROLLING FUNCIONAL (SCROLL SNAP) */
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        section {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 100px;
+            overflow: hidden;
+            background-color: #0f172a;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
+        
+        .slide-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            border-left: 8px solid var(--accent-emerald);
+            padding-left: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .accent-color { color: var(--accent-emerald); }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+        }
+
+        .formula-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 2px solid var(--accent-emerald);
+            font-family: 'Azeret Mono', monospace;
+            padding: 40px;
+            border-radius: 30px;
+            font-size: 50px;
+            text-align: center;
+        }
+
+        .corner-logo {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            height: 50px;
+            z-index: 1000;
+            border-radius: 10px;
+            display: none; 
+            box-shadow: 0 0 20px rgba(16,185,129,0.2);
+        }
+
+        .tag-eafit {
+            position: absolute;
+            top: 40px;
+            left: 60px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-emerald);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            text-transform: uppercase;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--accent-emerald);
+            transform: scale(1.5);
+            box-shadow: 0 0 10px var(--accent-emerald);
+        }
+
+        .chart-img {
+            max-width: 100%;
+            max-height: 380px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .wa-che-tag {
+            background: var(--accent-emerald);
+            color: var(--bg-dark);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .bar-bg { background: #1e293b; border-radius: 20px; height: 12px; margin-top: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, #059669, #10b981); border-radius: 20px; transition: width 1s ease-in-out; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; }
+        th { font-family: 'Poppins'; font-weight: 600; color: var(--accent-emerald); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        td { color: #e2e8f0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .nav-controls {
+            position: fixed; bottom: 30px; right: 40px;
+            display: flex; gap: 10px; z-index: 100;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: white; width: 45px; height: 45px; border-radius: 50%; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .nav-btn:hover { background: var(--accent-emerald); color: #020617; }
+        
+        .qr-container {
+            width: 220px;
+            height: 220px;
+            background: white;
+            padding: 12px;
+            border-radius: 20px;
+            margin: 0 auto;
+            box-shadow: 0 0 40px rgba(16,185,129,0.4);
+            transition: transform 0.3s ease;
+        }
+        .qr-container:hover { transform: scale(1.05); }
+        .qr-image { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- LOGO FIJO -->
+    <img id="mainLogo" src="https://pbs.twimg.com/profile_images/1585826939733872642/hxqMVWvh.png" alt="WEWAC" class="corner-logo">
+
+    <!-- INDICADOR DE PROGRESO -->
+    <div class="progress-indicator" id="dots"></div>
+
+    <!-- 1. PORTADA -->
+    <section id="s1">
+        <div class="tag-eafit">Universidad EAFIT · Caso de Estudio</div>
+        <div class="slide-content text-center">
+            <img src="https://pbs.twimg.com/profile_images/1585826939733872642/hxqMVWvh.png" alt="Logo Principal" class="h-40 mx-auto mb-8 rounded-3xl shadow-2xl">
+            <h1 class="text-8xl font-bold accent-color tracking-tighter">WEWAC</h1>
+            <p class="text-3xl font-light text-slate-300 mt-4">Finanzas Regenerativas & Capital Natural</p>
+            <div class="mt-12 text-slate-500 font-mono text-sm tracking-[0.3em]">TOKENIZACIÓN · GOBERNANZA · BIODIVERSIDAD</div>
+            <p class="mt-12 font-bold text-xl uppercase tracking-widest text-slate-400">Camilo Romero</p>
+        </div>
+    </section>
+
+    <!-- 2. PERFIL -->
+    <section id="s2">
+        <div class="slide-content">
+            <h2 class="slide-title">Mi trayectoria y propósito</h2>
+            <div class="grid grid-cols-2 gap-16 items-center">
+                <div class="text-center">
+                    <div class="w-96 h-96 rounded-full overflow-hidden border-[6px] border-emerald-500 shadow-2xl mx-auto relative">
+                        <img src="https://media.licdn.com/dms/image/v2/D4E03AQF9eTSy1tM3-Q/profile-displayphoto-scale_400_400/B4EZfXi62rGcAg-/0/1751667949534?e=1772668800&v=beta&t=YbmZG4XAILp_hjifHq8J7Sl_sI46oAzbeucUk5imPQw" alt="Camilo Romero" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-4xl font-bold accent-color">Camilo Romero</h3>
+                    <p class="text-xl text-slate-300 italic">"Arquitecto de infraestructuras financieras diseñadas para valorar la vida."</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-4"><i class="fa-solid fa-check-circle text-emerald-400"></i> <span class="text-lg">15+ años en expansión regional y estrategia comercial.</span></li>
+                        <li class="flex items-center gap-4"><i class="fa-solid fa-check-circle text-emerald-400"></i> <span class="text-lg">Especialista en RWA y mercados de Stablecoins.</span></li>
+                        <li class="flex items-center gap-4"><i class="fa-solid fa-check-circle text-emerald-400"></i> <span class="text-lg">Diseñador de modelos de capitalización biótica.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. LATAM CONTEXT -->
+    <section id="s3">
+        <div class="slide-content">
+            <h2 class="slide-title">LATAM en el Mapa Global</h2>
+            <div class="grid grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h3 class="text-4xl font-bold accent-color">64% actividad en CEX</h3>
+                    <p class="text-xl text-slate-300">Latinoamérica lidera la confianza en plataformas centralizadas para remesas y refugio de valor.</p>
+                    <ul class="text-slate-400">
+                        <li>• Superamos a Norteamérica (49%) y Europa (53%).</li>
+                        <li>• Driver: Volatilidad cambiaria e inflación persistente.</li>
+                    </ul>
+                </div>
+                <div class="text-center">
+                    <img src="https://www.chainalysis.com/wp-content/uploads/2025/09/2025-geos-report-formatted-charts-2-4.png" alt="Graph 2-4" class="chart-img mx-auto">
+                    <p class="text-[10px] text-slate-500 mt-2 uppercase">Fuente: Chainalysis Geography Report 2025</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. LIDERAZGO REGIONAL (TOP 5) -->
+    <section id="s4">
+        <div class="slide-content">
+            <h2 class="slide-title">Liderazgo Regional</h2>
+            <div class="grid grid-cols-2 gap-12 items-center">
+                <div class="text-center">
+                    <img src="https://www.chainalysis.com/wp-content/uploads/2025/09/2025-geos-report-formatted-charts-1-4.png" alt="Graph 1-4" class="chart-img mx-auto">
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-3xl font-bold accent-color">Top 5 Mercados LATAM</h3>
+                    <div class="glass-card p-4 bg-emerald-500/5">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr>
+                                    <th>Ranking / País</th>
+                                    <th class="text-right">Volumen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1. Brasil</td><td class="text-right font-mono">$318.8 Billones</td></tr>
+                                <tr><td>2. Argentina</td><td class="text-right font-mono">$93.9 Billones</td></tr>
+                                <tr><td>3. México</td><td class="text-right font-mono">$71.2 Billones</td></tr>
+                                <tr><td>4. Venezuela</td><td class="text-right font-mono">$44.6 Billones</td></tr>
+                                <tr><td class="font-bold accent-color">5. Colombia</td><td class="text-right font-bold accent-color font-mono">$44.2 Billones</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. COLOMBIA INSTITUCIONAL -->
+    <section id="s5">
+        <div class="slide-content">
+            <h2 class="slide-title">Colombia: El Refugio Digital</h2>
+            <div class="grid grid-cols-2 gap-10">
+                <div class="glass-card">
+                    <h3 class="text-3xl font-bold accent-color mb-4">> 50% Stablecoins</h3>
+                    <p class="text-slate-300 text-lg">En Colombia, las monedas estables representan más de la mitad de las compras con pesos (COP). Refugio inmediato ante la devaluación.</p>
+                </div>
+                <div class="glass-card border-blue-400/30">
+                    <h3 class="text-3xl font-bold text-blue-400 mb-4">Caso Wenia</h3>
+                    <p class="text-slate-300 text-lg">La integración de **Wenia (Grupo Bancolombia)** marca la madurez del mercado y la adopción de infraestructuras corporativas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. TAXONOMÍA I -->
+    <section id="s6">
+        <div class="slide-content">
+            <h2 class="slide-title">Taxonomía de Tokens I</h2>
+            <div class="grid grid-cols-2 gap-10">
+                <div class="glass-card text-center">
+                    <i class="fa-solid fa-coins text-emerald-400 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">Tokens Fungibles</h3>
+                    <p class="text-slate-400">Unidades intercambiables 1:1. Base de la liquidez. Ej: Stablecoins vinculadas al USD o al COP.</p>
+                </div>
+                <div class="glass-card text-center">
+                    <i class="fa-solid fa-certificate text-blue-400 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">NFTs (No Fungibles)</h3>
+                    <p class="text-slate-400">Registros únicos e indivisibles. Fundamento para certificar impacto territorial y trazabilidad biótica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. TAXONOMÍA II -->
+    <section id="s7">
+        <div class="slide-content">
+            <h2 class="slide-title">Taxonomía de Tokens II</h2>
+            <div class="grid grid-cols-2 gap-10">
+                <div class="glass-card text-center border-blue-500/20">
+                    <i class="fa-solid fa-key text-blue-400 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">Utility Tokens</h3>
+                    <p class="text-slate-400">Derechos de acceso o gobernanza operativa. Permiten participar en las decisiones de una DAO.</p>
+                </div>
+                <div class="glass-card text-center border-emerald-500/20">
+                    <i class="fa-solid fa-vault text-emerald-400 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">Security Tokens</h3>
+                    <p class="text-slate-400">Representan derechos económicos reales: dividendos, deudas o rentabilidades sobre activos físicos (RWA).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. INTRO WEWAC -->
+    <section id="s8">
+        <div class="slide-content text-center">
+            <span class="wa-che-tag">WE'PE + WAÇE</span>
+            <h2 class="text-7xl font-bold italic mb-8">WEWAC: El Puente</h2>
+            <p class="text-3xl font-light text-slate-200 max-w-4xl mx-auto leading-relaxed">
+                "No vendemos el agua; la cuidamos". WEWAC es la raíz soberana en la blockchain para valorizar la <span class="accent-color font-bold">preservación</span>.
+            </p>
+            <div class="grid grid-cols-2 gap-8 mt-16 max-w-2xl mx-auto">
+                <div class="tile">
+                    <h4 class="font-bold text-emerald-400 text-xl">We'pe (Páramo)</h4>
+                    <p class="text-sm">Identidad cultural Nasa Yuwe.</p>
+                </div>
+                <div class="tile">
+                    <h4 class="font-bold text-emerald-400 text-xl">WaÇe (Raíz)</h4>
+                    <p class="text-sm">Infraestructura tecnológica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. EL PROBLEMA -->
+    <section id="s9">
+        <div class="slide-content">
+            <h2 class="slide-title">La Falla de Mercado</h2>
+            <div class="grid grid-cols-2 gap-12 items-center">
+                <div class="text-center">
+                    <div class="text-[140px] font-bold accent-color leading-none">70%</div>
+                    <p class="text-2xl text-slate-400 mt-4 uppercase tracking-widest">Agua dulce en riesgo</p>
+                </div>
+                <div class="glass-card bg-red-500/5 border-red-500/20 p-12">
+                    <h3 class="text-3xl font-bold mb-6">Invisibilidad Económica</h3>
+                    <p class="text-xl text-slate-300">La economía tradicional valora el agua en <strong class="text-red-400">CERO</strong> mientras está sana en el ecosistema. Solo adquiere precio al ser destruida o extraída.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. POTENCIAL HÍDRICO -->
+    <section id="s10" style="padding: 0;">
+        <div class="grid grid-cols-2 w-full h-full">
+            <div class="flex flex-col justify-center p-24 bg-slate-900">
+                <h2 class="slide-title" style="border:none; padding:0;">El Gigante Hídrico</h2>
+                <ul class="mt-8 space-y-6">
+                    <li class="flex items-start gap-4">
+                        <i class="fa-solid fa-mountain text-emerald-400 text-2xl mt-1"></i>
+                        <span class="text-xl">**50% de los páramos del mundo** están en Colombia.</span>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <i class="fa-solid fa-droplet text-emerald-400 text-2xl mt-1"></i>
+                        <span class="text-xl">70% de nuestra agua nace en estos ecosistemas.</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="h-full">
+                <img src="https://aida-americas.org/sites/default/files/blog_images/santurban1_alberto_pena_kay.jpg" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. FINANZAS PROGRAMABLES -->
+    <section id="s11">
+        <div class="slide-content">
+            <h2 class="slide-title">Economía Programable</h2>
+            <div class="glass-card mb-8">
+                <h3 class="text-2xl font-bold accent-color">Incentivos Automáticos</h3>
+                <p class="text-slate-300 mt-2">Si los datos IoT reportan mejora en la salud del páramo, el valor de los activos se ajusta algorítmicamente para premiar la regeneración.</p>
+            </div>
+            <div class="glass-card border-blue-500/20">
+                <h3 class="text-2xl font-bold text-blue-400">Gobernanza DAO</h3>
+                <p class="text-slate-300 mt-2">Gestión inmutable y transparente de los bienes comunes sobre la red Algorand.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. MODELO VET -->
+    <section id="s12">
+        <div class="slide-content text-center">
+            <h2 class="slide-title mx-auto w-fit mb-12">Modelo Económico VET</h2>
+            <div class="formula-box max-w-4xl mx-auto py-12 mb-12">
+                VET = VU + VE
+            </div>
+            <div class="grid grid-cols-2 gap-10 text-left">
+                <div class="glass-card">
+                    <h4 class="accent-color text-2xl font-bold">VU: Valor de Uso</h4>
+                    <p class="text-slate-400 mt-2">Transacciones: Logística, Marketplace y Trazabilidad.</p>
+                </div>
+                <div class="glass-card border-blue-400/20">
+                    <h4 class="text-blue-400 text-2xl font-bold">VE: Valor de Existencia</h4>
+                    <p class="text-slate-400 mt-2">Patrimonio natural verificado por oráculos bióticos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. FRICCIÓN POSITIVA -->
+    <section id="s13">
+        <div class="slide-content text-center">
+            <h2 class="slide-title mx-auto w-fit mb-12">Sostenibilidad Operativa</h2>
+            <div class="formula-box border-blue-500/30 text-blue-400 text-4xl mb-12">
+                VU = ∑ [ (Mi) + (T) ]
+            </div>
+            <p class="text-3xl font-bold accent-color">T (Tasa Tecnológica): $10 COP</p>
+            <p class="text-xl text-slate-400 mt-6 max-w-2xl mx-auto">Cada micro-interacción financia la infraestructura física de protección.</p>
+        </div>
+    </section>
+
+    <!-- 14. INHÓSPITO (IMAGEN ACTUALIZADA) -->
+    <section id="s14">
+        <div class="slide-content">
+            <h2 class="slide-title">Inhóspito: Nodo Origen</h2>
+            <div class="grid grid-cols-2 gap-16 items-center">
+                <div class="glass-card border-emerald-500/30 p-12">
+                    <h3 class="text-6xl font-bold accent-color mb-4">404 Ha</h3>
+                    <p class="text-lg text-slate-400 mt-8">Modelo de **Conservación Habitada** donde la tierra real se une a la inmutabilidad digital.</p>
+                    <p class="text-2xl text-slate-300 mt-4">Páramo de Mejue.</p>
+                </div>
+                <div class="rounded-[40px] overflow-hidden shadow-2xl h-[450px]">
+                    <!-- Nueva imagen de Inhóspito solicitada -->
+                    <img src="https://lh3.googleusercontent.com/proxy/f2NtlOgG3v7RKEarxy7718enNtSXxeqfyMuq8KgcjvZ0JXu6nXFw2mC1r4DwSlTIRyMFsKYo2AxzIcZItZLBAGPtRg" alt="Nodo Inhóspito" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. REAL ESTATE TABLE -->
+    <section id="s15">
+        <div class="slide-content">
+            <h2 class="slide-title">Tokenización de Tierras</h2>
+            <div class="glass-card overflow-hidden p-0">
+                <table class="w-full text-left">
+                    <thead class="bg-emerald-500 text-slate-900 font-bold uppercase text-xs">
+                        <tr><th class="p-8">Unidad</th><th class="p-8">Participación Legal</th><th class="p-8">Valor RWA</th></tr>
+                    </thead>
+                    <tbody class="text-xl">
+                        <tr class="border-t border-white/10"><td class="p-8">1 Hectárea</td><td class="p-8">Escritura + 4 Acciones</td><td class="p-8 font-mono accent-color">$40M COP</td></tr>
+                        <tr class="border-t border-white/10 bg-white/5"><td class="p-8">Senior Portafolio</td><td class="p-8">Escritura + 20 Acciones</td><td class="p-8 font-mono accent-color">$200M COP</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 16. VALIDACIÓN -->
+    <section id="s16">
+        <div class="slide-content">
+            <h2 class="slide-title">Validación en Campo</h2>
+            <div class="max-w-4xl mx-auto space-y-12">
+                <div>
+                    <div class="flex justify-between mb-2"><span class="text-xl">Hectáreas Vinculadas</span><span class="accent-color font-bold">1.200 Ha</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%;"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-2"><span class="text-xl">Nodos Territoriales Activos</span><span class="accent-color font-bold">5 Comunidades</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 60%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 17. IMPACTO SOCIAL -->
+    <section id="s17">
+        <div class="slide-content">
+            <h2 class="slide-title">Impacto Social</h2>
+            <div class="grid grid-cols-2 gap-12 items-center">
+                <div class="text-center bg-emerald-500/5 p-16 rounded-[50px] border border-emerald-500/20">
+                    <div class="text-[140px] font-bold accent-color leading-none">80%</div>
+                    <p class="text-xl text-slate-400 mt-4 uppercase">Dependencia Local</p>
+                </div>
+                <p class="text-2xl text-slate-300 leading-relaxed">
+                    El sistema retorna utilidad líquida directa (DBD) a los guardianes del territorio. <span class="accent-color font-bold">Conservar el agua es el nuevo empleo digno.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 18. CIERRE PERSONALIZADO CON QR -->
+    <section id="s18" class="bg-slate-950">
+        <div class="slide-content text-center">
+            <h2 class="text-3xl md:text-4xl font-bold gradient-text italic mb-10 leading-tight max-w-4xl mx-auto">
+                ¿Y si el activo más valioso del siglo XXI no fuera el oro… sino el agua?
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto mt-12">
+                <div class="text-left space-y-6">
+                    <div>
+                        <p class="text-3xl font-bold">Camilo Romero</p>
+                        <p class="text-emerald-400 text-xl font-medium">Estrategia e Innovación Financiera</p>
+                    </div>
+                    <p class="text-slate-400 text-lg leading-relaxed">
+                        Estamos construyendo el mercado de la vida. Conectemos para estructurar el futuro de las finanzas regenerativas.
+                    </p>
+                    <div class="flex items-center gap-4 text-emerald-400">
+                        <i class="fa-solid fa-link text-xl"></i>
+                        <a href="https://linktr.ee/camiloromero" target="_blank" class="font-mono text-xl hover:underline transition">linktr.ee/camiloromero</a>
+                    </div>
+                    <p class="text-slate-600 text-xs tracking-widest uppercase pt-10">EAFIT · 2025 · Medellín · Colombia</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="qr-container">
+                        <!-- Código QR Actualizado -->
+                        <img src="https://uploads.onecompiler.io/44apkjp8s/44dtg5fd8/QR.jpeg" alt="QR Linktree Camilo Romero" class="qr-image">
+                    </div>
+                    <p class="text-emerald-400 font-bold uppercase tracking-widest text-sm">Escanea para conectar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTROLES -->
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="prev()"><i class="fas fa-chevron-up"></i></button>
+        <button class="nav-btn" onclick="next()"><i class="fas fa-chevron-down"></i></button>
+    </div>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const dotsContainer = document.getElementById('dots');
+        const mainLogo = document.getElementById('mainLogo');
+
+        sections.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.addEventListener('click', () => {
+                sections[i].scrollIntoView({ behavior: 'smooth' });
+            });
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = Array.from(sections).indexOf(entry.target);
+                    dots.forEach(d => d.classList.remove('active'));
+                    dots[index].classList.add('active');
+                    mainLogo.style.display = index === 0 ? 'none' : 'block';
+                }
+            });
+        }, { threshold: 0.6 });
+
+        sections.forEach(s => observer.observe(s));
+
+        function next() {
+            const current = Math.round(window.scrollY / window.innerHeight);
+            if (current < sections.length - 1) {
+                sections[current + 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function prev() {
+            const current = Math.round(window.scrollY / window.innerHeight);
+            if (current > 0) {
+                sections[current - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.onkeydown = (e) => {
+            if (e.key === 'ArrowDown' || e.key === ' ') next();
+            if (e.key === 'ArrowUp') prev();
+        };
+    </script>
+</body>
+</html>
