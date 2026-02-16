@@ -198,6 +198,16 @@
         }
         .qr-container:hover { transform: scale(1.05); }
         .qr-image { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #94a3b8;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        .social-link:hover { color: var(--accent-emerald); transform: translateX(5px); }
     </style>
 </head>
 <body>
@@ -220,7 +230,7 @@
         </div>
     </section>
 
-    <!-- 2. PERFIL (AJUSTADO) -->
+    <!-- 2. PERFIL -->
     <section id="s2">
         <div class="slide-content">
             <h2 class="slide-title">Mi trayectoria y propósito</h2>
@@ -272,7 +282,7 @@
                     </ul>
                 </div>
                 <div class="text-center">
-                    <img src="https://www.chainalysis.com/wp-content/uploads/2025/09/2025-geos-report-formatted-charts-2-4.png" alt="Graph 2-4" class="chart-img mx-auto">
+                    <img src="https://www.chainalysis.com/wp-content/uploads/2025/09/2025-geos-report-formatted-charts-2-4.png" alt="Grafica Chainalysis 2-4" class="chart-img mx-auto">
                     <p class="text-[10px] text-slate-500 mt-2 uppercase">Fuente: Chainalysis Geography Report 2025</p>
                 </div>
             </div>
@@ -285,7 +295,7 @@
             <h2 class="slide-title">Liderazgo Regional</h2>
             <div class="grid grid-cols-2 gap-12 items-center">
                 <div class="text-center">
-                    <img src="https://www.chainalysis.com/wp-content/uploads/2025/09/2025-geos-report-formatted-charts-1-4.png" alt="Graph 1-4" class="chart-img mx-auto">
+                    <img src="https://www.chainalysis.com/wp-content/uploads/2025/09/2025-geos-report-formatted-charts-1-4.png" alt="Grafica Chainalysis 1-4" class="chart-img mx-auto">
                 </div>
                 <div class="space-y-6">
                     <h3 class="text-3xl font-bold accent-color">Top 5 Mercados LATAM</h3>
@@ -377,11 +387,11 @@
             <div class="grid grid-cols-2 gap-8 mt-16 max-w-2xl mx-auto">
                 <div class="tile">
                     <h4 class="font-bold text-emerald-400 text-xl">We'pe (Páramo)</h4>
-                    <p class="text-sm">Simbología Nasa Yuwe.</p>
+                    <p class="text-sm text-slate-500">Simbología Nasa Yuwe.</p>
                 </div>
                 <div class="tile">
                     <h4 class="font-bold text-emerald-400 text-xl">WaÇe (Raíz)</h4>
-                    <p class="text-sm">Infraestructura tecnológica.</p>
+                    <p class="text-sm text-slate-500">Infraestructura tecnológica.</p>
                 </div>
             </div>
         </div>
@@ -421,7 +431,7 @@
                 </ul>
             </div>
             <div class="h-full">
-                <img src="https://aida-americas.org/sites/default/files/blog_images/santurban1_alberto_pena_kay.jpg" class="w-full h-full object-cover">
+                <img src="https://aida-americas.org/sites/default/files/blog_images/santurban1_alberto_pena_kay.jpg" alt="Paramo Santurban" class="w-full h-full object-cover">
             </div>
         </div>
     </section>
@@ -541,41 +551,69 @@
         </div>
     </section>
 
-    <!-- 18. CIERRE PERSONALIZADO CON QR -->
+    <!-- 18. CIERRE PERSONALIZADO CON QR Y REDES -->
     <section id="s18" class="bg-slate-950">
-        <div class="slide-content text-center">
-            <h2 class="text-3xl md:text-4xl font-bold gradient-text italic mb-10 leading-tight max-w-4xl mx-auto">
-                ¿Y si el activo más valioso del siglo XXI no fuera el oro… sino el agua?
-            </h2>
+        <div class="slide-content">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold gradient-text italic mb-4 leading-tight max-w-4xl mx-auto">
+                    ¿Y si el activo más valioso del siglo XXI no fuera el oro… sino el agua?
+                </h2>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto mt-12">
-                <div class="text-left space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+                <!-- Columna Izquierda: Información de Camilo -->
+                <div class="text-left space-y-8">
                     <div>
                         <p class="text-3xl font-bold">Camilo Romero</p>
-                        <p class="text-emerald-400 text-xl font-medium">Estrategia e Innovación Financiera</p>
+                        <p class="text-emerald-400 text-xl font-medium mb-4">Estrategia e Innovación Financiera</p>
+                        <p class="text-slate-400 text-lg leading-relaxed mb-6">
+                            Estamos construyendo el mercado de la vida. Conectemos para estructurar el futuro de las finanzas regenerativas.
+                        </p>
                     </div>
-                    <p class="text-slate-400 text-lg leading-relaxed">
-                        Estamos construyendo el mercado de la vida. Conectemos para estructurar el futuro de las finanzas regenerativas.
-                    </p>
-                    <div class="flex items-center gap-4 text-emerald-400">
-                        <i class="fa-solid fa-link text-xl"></i>
-                        <a href="https://linktr.ee/camiloromero" target="_blank" class="font-mono text-xl hover:underline transition">linktr.ee/camiloromero</a>
+
+                    <!-- Canales de Camilo y WEWAC -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="https://linkedin.com/company/wewacco/" target="_blank" class="social-link">
+                            <i class="fa-brands fa-linkedin text-xl"></i>
+                            <span>linkedin.com/company/wewacco</span>
+                        </a>
+                        <a href="https://wewac.co/" target="_blank" class="social-link">
+                            <i class="fa-solid fa-globe text-xl"></i>
+                            <span>wewac.co</span>
+                        </a>
+                        <a href="https://mercado.wewac.co/" target="_blank" class="social-link">
+                            <i class="fa-solid fa-store text-xl"></i>
+                            <span>mercado.wewac.co</span>
+                        </a>
+                        <a href="https://www.instagram.com/wewac.co" target="_blank" class="social-link">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                            <span>@wewac.co</span>
+                        </a>
+                        <a href="https://linktr.ee/camiloromero" target="_blank" class="social-link">
+                            <i class="fa-solid fa-link text-xl"></i>
+                            <span>linktr.ee/camiloromero</span>
+                        </a>
                     </div>
-                    <p class="text-slate-600 text-xs tracking-widest uppercase pt-10">EAFIT · 2025 · Medellín · Colombia</p>
+                    
+                    <p class="text-slate-600 text-[10px] tracking-[0.3em] uppercase pt-8">EAFIT · 2025 · Medellín · Colombia</p>
                 </div>
                 
-                <div class="space-y-4">
+                <!-- Columna Derecha: QR -->
+                <div class="text-center space-y-6">
                     <div class="qr-container">
-                        <!-- Código QR Actualizado -->
+                        <!-- Código QR -->
                         <img src="https://uploads.onecompiler.io/44apkjp8s/44dtg5fd8/QR.jpeg" alt="QR Linktree Camilo Romero" class="qr-image">
                     </div>
-                    <p class="text-emerald-400 font-bold uppercase tracking-widest text-sm">Escanea para conectar</p>
+                    <div class="space-y-1">
+                        <p class="text-emerald-400 font-bold uppercase tracking-widest text-sm">Escanea para conectar</p>
+                        <p class="text-slate-500 text-xs">Accede a todo el ecosistema WEWAC</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CONTROLES -->
+    <!-- CONTROLES DE NAVEGACIÓN -->
     <div class="nav-controls">
         <button class="nav-btn" onclick="prev()"><i class="fas fa-chevron-up"></i></button>
         <button class="nav-btn" onclick="next()"><i class="fas fa-chevron-down"></i></button>
@@ -586,6 +624,7 @@
         const dotsContainer = document.getElementById('dots');
         const mainLogo = document.getElementById('mainLogo');
 
+        // Generar indicadores laterales
         sections.forEach((_, i) => {
             const dot = document.createElement('div');
             dot.className = 'dot';
@@ -602,6 +641,8 @@
                     const index = Array.from(sections).indexOf(entry.target);
                     dots.forEach(d => d.classList.remove('active'));
                     dots[index].classList.add('active');
+                    
+                    // Mostrar logo excepto en portada
                     mainLogo.style.display = index === 0 ? 'none' : 'block';
                 }
             });
